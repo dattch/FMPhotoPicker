@@ -11,8 +11,9 @@ import UIKit
 let kContentFrameSpacing: CGFloat = 22.0
 
 // MARK: - Delegate protocol
-public protocol FMImageEditorViewControllerDelegate: class {
+@objc public protocol FMImageEditorViewControllerDelegate: AnyObject {
     func fmImageEditorViewController(_ editor: FMImageEditorViewController, didFinishEdittingPhotoWith photo: UIImage)
+    @objc optional func fmImageEditorDidCancelEditingPhoto()
 }
 
 public class FMImageEditorViewController: UIViewController {
@@ -332,7 +333,8 @@ public class FMImageEditorViewController: UIViewController {
             self.cropView.contentFrame = self.contentFrameFullScreen()
             self.cropView.moveCropBoxToAspectFillContentFrame()
             self.hideAnimatedMenu {
-                self.dismiss(animated: self.isAnimatedPresent, completion: nil)
+                self.dismiss(animated: self.isAnimatedPresent) { self.delegate?.fmImageEditorDidCancelEditingPhoto?()
+                }
             }
         }
         
